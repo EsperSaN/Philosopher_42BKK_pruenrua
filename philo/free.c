@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pruenrua <pruenrua@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/26 17:31:09 by pruenrua          #+#    #+#             */
+/*   Updated: 2023/09/26 18:06:05 by pruenrua         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	nfree(void *p)
@@ -10,8 +22,8 @@ void	let_em_free(t_var *v)
 {
 	int	i;
 
-	if (v->is_die)
-		nfree(v->is_die);
+	if (v->status)
+		nfree(v->status);
 	if (v->philo)
 		nfree(v->philo);
 	if (v->all_spoon)

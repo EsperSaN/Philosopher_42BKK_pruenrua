@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pruenrua <pruenrua@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/26 17:31:56 by pruenrua          #+#    #+#             */
+/*   Updated: 2023/09/26 18:07:31 by pruenrua         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	sleep_ms(t_philo *p, size_t ms)
@@ -7,12 +19,12 @@ void	sleep_ms(t_philo *p, size_t ms)
 
 	p->p_time = get_time();
 	dif = 0;
-	if (*p->is_die == 1)
+	if (*p->status == DIE)
 		return ;
 	while (dif < ms)
 	{
 		usleep(1);
-		dif = dif_time(p->p_time);
+		dif = dif_current_time(p->p_time);
 	}
 }
 
@@ -23,14 +35,15 @@ void	report(t_philo *p, char *report)
 	long	ms_time;
 
 	pthread_mutex_lock(p->print_lock);
-	if (*p->is_die == 0)
-		printf("%lu    %d    %s\n", dif_time(p->begin_time), p->no, report);
+	if (*p->status == ALIVE)
+		printf("%lu    %d    %s\n", dif_current_time(p->begin_time), \
+		p->no, report);
 	pthread_mutex_unlock(p->print_lock);
 }
 
 void	eat_now(t_philo	*philo)
 {
-	if (*philo->is_die == 1)
+	if (*philo->status == DIE)
 		return ;
 	if (philo->no % 2 == 0)
 	{
@@ -62,10 +75,11 @@ void	*rout(void *av)
 	count = 0;
 	st_time = get_time();
 	philo->last_eat_time = st_time;
-	while (*philo->is_die == 0)
+	while (*philo->status == ALIVE)
 	{
 		report(philo, "is thinking");
-		while (philo->spoon_left == NULL && philo->spoon_right == NULL && *philo->is_die == 0)
+		while (philo->spoon_left == NULL && philo->spoon_right == NULL \
+				&& *philo->status == ALIVE)
 			sleep_ms(philo, philo->die_time);
 		eat_now(philo);
 		count++;
