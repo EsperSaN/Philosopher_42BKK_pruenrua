@@ -6,7 +6,7 @@
 /*   By: pruenrua <pruenrua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:31:09 by pruenrua          #+#    #+#             */
-/*   Updated: 2023/09/26 18:06:05 by pruenrua         ###   ########.fr       */
+/*   Updated: 2023/09/26 20:11:47 by pruenrua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,10 @@ void	let_em_free(t_var *v)
 	{
 		pthread_mutex_destroy(v->print_lock);
 		nfree(v->print_lock);
+	}
+	if (v->c_status)
+	{
+		pthread_mutex_destroy(v->c_status);
+		nfree(v->c_status);
 	}
 }

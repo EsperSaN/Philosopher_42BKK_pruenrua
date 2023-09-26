@@ -6,7 +6,7 @@
 /*   By: pruenrua <pruenrua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:31:03 by pruenrua          #+#    #+#             */
-/*   Updated: 2023/09/26 18:01:13 by pruenrua         ###   ########.fr       */
+/*   Updated: 2023/09/26 20:14:47 by pruenrua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	init_data(t_var *var)
 		i++;
 	}
 	if (pthread_mutex_init(var->print_lock, NULL) != 0)
+		return (printf(MUTEX_FAIL), 0);
+	if (pthread_mutex_init(var->c_status, NULL) != 0)
 		return (printf(MUTEX_FAIL), 0);
 	return (1);
 }
@@ -72,6 +74,9 @@ int	allocate_data(t_var *var)
 	var->print_lock = ft_calloc(sizeof(pthread_mutex_t), 1);
 	if (var->print_lock == NULL)
 		return (0);
+	var->c_status = ft_calloc(sizeof(pthread_mutex_t), 1);
+	if (var->print_lock == NULL)
+		return (0);
 	return (1);
 }
 
@@ -79,8 +84,8 @@ void	assign_philo_data(t_var *var)
 {
 	int	i;
 
-	i = 0;
-	while (i < var->philo_num)
+	i = -1;
+	while (++i < var->philo_num)
 	{
 		var->philo[i].no = i + 1;
 		var->philo[i].die_time = var->die_time;
@@ -90,6 +95,7 @@ void	assign_philo_data(t_var *var)
 		var->philo[i].begin_time = var->begin_epoch_time;
 		var->philo[i].print_lock = var->print_lock;
 		var->philo[i].status = var->status;
+		var->philo[i].c_status = var->c_status;
 		var->philo[i].spoon_left = &var->all_spoon[i];
 		if (var->philo_num == 1)
 		{
@@ -100,6 +106,5 @@ void	assign_philo_data(t_var *var)
 			var->philo[i].spoon_right = &var->all_spoon[0];
 		else
 			var->philo[i].spoon_right = &var->all_spoon[i + 1];
-		i++;
 	}
 }

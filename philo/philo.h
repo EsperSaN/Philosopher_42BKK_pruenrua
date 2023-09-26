@@ -6,7 +6,7 @@
 /*   By: pruenrua <pruenrua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:31:35 by pruenrua          #+#    #+#             */
-/*   Updated: 2023/09/26 18:04:41 by pruenrua         ###   ########.fr       */
+/*   Updated: 2023/09/26 20:07:37 by pruenrua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_philo {
 	pthread_mutex_t	*print_lock;
 	pthread_mutex_t	*spoon_left;
 	pthread_mutex_t	*spoon_right;
+	pthread_mutex_t	*c_status;
 	int				no;
 	int				*status;
 	long			begin_time;
@@ -49,6 +50,7 @@ typedef struct s_philo {
 typedef struct s_variable {
 	pthread_mutex_t		*print_lock;
 	pthread_mutex_t		*all_spoon;
+	pthread_mutex_t		*c_status;
 	struct s_philo		*philo;
 	long				philo_num;
 	long				die_time;
@@ -79,6 +81,7 @@ void	die_check(t_philo *p);
 void	die_check(t_philo *p);
 void	mammy_thread_takking_care_of_all_philo(t_var *v);
 /* ROUTINE.C */
+int		check_state(t_philo *p);
 void	sleep_ms(t_philo *p, size_t ms);
 void	report(t_philo *p, char *report);
 void	eat_now(t_philo	*philo);

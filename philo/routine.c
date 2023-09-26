@@ -6,11 +6,21 @@
 /*   By: pruenrua <pruenrua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/26 17:31:56 by pruenrua          #+#    #+#             */
-/*   Updated: 2023/09/26 18:07:31 by pruenrua         ###   ########.fr       */
+/*   Updated: 2023/09/26 20:11:04 by pruenrua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	check_state(t_philo *p)
+{
+	int	state;
+
+	pthread_mutex_lock(p->c_status);
+	state = *p->status;
+	pthread_mutex_unlock(p->c_status);
+	return (state);
+}
 
 void	sleep_ms(t_philo *p, size_t ms)
 {
@@ -19,7 +29,7 @@ void	sleep_ms(t_philo *p, size_t ms)
 
 	p->p_time = get_time();
 	dif = 0;
-	if (*p->status == DIE)
+	if (check_state(p) == DIE)
 		return ;
 	while (dif < ms)
 	{
@@ -35,7 +45,7 @@ void	report(t_philo *p, char *report)
 	long	ms_time;
 
 	pthread_mutex_lock(p->print_lock);
-	if (*p->status == ALIVE)
+	if (check_state(p) == ALIVE)
 		printf("%lu    %d    %s\n", dif_current_time(p->begin_time), \
 		p->no, report);
 	pthread_mutex_unlock(p->print_lock);
@@ -43,7 +53,7 @@ void	report(t_philo *p, char *report)
 
 void	eat_now(t_philo	*philo)
 {
-	if (*philo->status == DIE)
+	if (check_state(philo) == DIE)
 		return ;
 	if (philo->no % 2 == 0)
 	{
@@ -75,11 +85,11 @@ void	*rout(void *av)
 	count = 0;
 	st_time = get_time();
 	philo->last_eat_time = st_time;
-	while (*philo->status == ALIVE)
+	while (check_state(philo) == ALIVE)
 	{
 		report(philo, "is thinking");
 		while (philo->spoon_left == NULL && philo->spoon_right == NULL \
-				&& *philo->status == ALIVE)
+				&& check_state(philo) == ALIVE)
 			sleep_ms(philo, philo->die_time);
 		eat_now(philo);
 		count++;
